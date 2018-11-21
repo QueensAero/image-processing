@@ -20,7 +20,7 @@ thresh_image = threshold_image(im, make_copy=True, percent=99.5)
 features = nonzero(transpose(flip(flip(thresh_image, axis=1))))     # Get non-zero points
 feature_points = transpose(features)                                # Get points as array of tuples
 
-db = DBSCAN().fit(feature_points)                                   # Perform clustering
+db = DBSCAN(eps=10).fit(feature_points)                                   # Perform clustering
 sample_mask = zeros_like(db.labels_, dtype=bool)                    # Generate mask
 sample_mask[db.core_sample_indices_] = True                         # Set indexes to true
 labels = db.labels_                                                 # Get labels
@@ -43,7 +43,6 @@ for k, col in zip(unique_labs, colours):
 
     class_mask = (labels == k)
     coord = feature_points[class_mask & sample_mask]
-
     plt.plot(coord[:, 0], coord[:, 1], 'o', markerfacecolor=tuple(col), markeredgecolor='k', markersize=14)
 
     coord = feature_points[class_mask & ~sample_mask]
