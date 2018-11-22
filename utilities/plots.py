@@ -1,34 +1,36 @@
-from matplotlib.pyplot import figure, imshow, show, title, plot, cm, scatter
+from matplotlib.pyplot import figure, imshow, show, title, plot, cm, scatter, savefig
 from numpy import linspace
 
 
 # Plots image (mainly for debugging
 def display_image(image, _title='Test image', blocking=False):
-    figure(_title)                 # Create new figure
+    figure(_title)                  # Create new figure
     imshow(image, cmap='gray')      # Display image (as greyscale
-    if _title != 'Test image':
-        title(_title)
+    title(_title)                   # Display title
     show(block=blocking)            # Show figure/make blocking or not
 
 
+# Function to plot points from image (thresholded usually)
 def plot_image(features, _title='Image plot', blocking=False):
-    figure(_title)
-    scatter(features[:, 0], features[:, 1])
-    title(_title)
-    show(block=blocking)
+    figure(_title)                              # Create figure
+    scatter(features[:, 0], features[:, 1])     # Plot points as scatter plot
+    title(_title)                               # Add title
+    show(block=blocking)                        # Display figure
 
 
-def plot_clusters(feature_sets, labels, _title='Clustered image', blocking=True):
-    figure(_title)
-    colours = [cm.Spectral(each) for each in linspace(0, 1, len(feature_sets))]
+# Function to plot list of clusters
+def plot_clusters(feature_sets, labels, _title='Clustered image', blocking=True, save=True):
+    figure(_title)                                                              # Create new figure
+    colours = [cm.Spectral(each) for each in
+               linspace(0, 1, len(feature_sets))]                               # Generate set of colours
 
-    for label, colour, feature in zip(labels, colours, feature_sets):
-        if label == -1:
+    for label, colour, feature in zip(labels, colours, feature_sets):           # For each cluster
+        if label == -1:                                                         # If noise plot as black
             colour = [0, 0, 0, 1]
 
-        plot(feature[:, 0], feature[:, 1], 'o', markerfacecolor=tuple(colour), markeredgecolor='k', markersize=14)
-
-        # coord = feature_points[class_mask & ~sample_mask]
-        # plt.plot(feature[:, 0], feature[:, 1], 'o', markerfacecolor=tuple(col), markeredgecolor='b', markersize=6)
-    title(_title)
-    show(block=blocking)
+        plot(feature[:, 0], feature[:, 1], 'o', markerfacecolor=tuple(colour),
+             markeredgecolor='k', markersize=14)                                # Plot cluster
+    title(_title)                                                               # Add title
+    if save:                                                                    # If saving enabled, save figure
+        savefig('results/cluster_plot.png')
+    show(block=blocking)                                                        # Display figure
