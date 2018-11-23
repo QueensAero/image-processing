@@ -1,7 +1,7 @@
 from utilities.file_utilities import import_image
 from process import threshold_image
 from numpy import nonzero, transpose, flip
-from cluster import cluster_points
+from cluster import cluster_points, make_mask
 from utilities.plots import plot_clusters
 from utilities.utilities import count_clusters
 # Script to import test image then threshold and cluster points
@@ -17,5 +17,9 @@ features = transpose(nonzero(transpose(flip(flip(thresh_image, axis=1)))))     #
 cluster_sets, labels = cluster_points(features)
 print('Number of clusters: ', count_clusters(labels))
 
+# Make masks
+centers, masks = make_mask(cluster_sets)
+
 # Plot clusters
-plot_clusters(cluster_sets, labels)
+plot_clusters(cluster_sets, labels, centers=centers, masks=masks)
+

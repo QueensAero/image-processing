@@ -1,5 +1,6 @@
-from numpy import zeros_like
+from numpy import zeros_like, zeros, mean
 from sklearn.cluster import DBSCAN
+from scipy.spatial import ConvexHull
 
 
 def cluster_points(features):
@@ -14,3 +15,15 @@ def cluster_points(features):
         cluster_sets.append(features[labels == label])  # Add points within to cluster
 
     return cluster_sets, labels
+
+
+# Function to calculate cluster masks
+def make_mask(clusters):
+    centers = zeros(len(clusters), dtype=(int, 2))      # Calculate centers of mass
+    masks = []                                          # Initialize array of masks
+
+    for i, cluster in enumerate(clusters):              # For each cluster
+        centers[i] = mean(cluster, axis=0)              # Calculate center
+        masks.append(ConvexHull(cluster))               # Calculate mask
+
+    return centers, masks
